@@ -12,3 +12,7 @@ $ export HUBOT_SLACK_TOKEN=hoge
 $ npm i
 $ ./bin/hubot --adapter slack
 ```
+
+# アカウントの登録方法
+`main.js`で、SlackIDをハードコーディングします。SlackIDは
+`https://slack.com/api/users.list?token=hoge`にて確認できます。
