@@ -3,7 +3,8 @@ const cron = require('cron').CronJob;
 
 const id = {
   'xuzijian629': 'U2F6UPCKB',
-  'kenshin': 'U2F7L8BGE'
+  'kenshin': 'U2F7L8BGE',
+  'ScarletBat': 'U2F5TUURF'
 };
 
 async function getSolvedProblems(user, date) {
@@ -12,7 +13,7 @@ async function getSolvedProblems(user, date) {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     await page.goto(`https://kenkoooo.com/atcoder/?user=${user}&kind=user`, {waitUntil: "networkidle2", timeout: 3000000});
-    await page.waitFor(60000);
+    await page.waitFor(120000);
     let streak = await page.$('#root > div > div > div > div > div:nth-child(3) > div:nth-child(7) > h3');
     ret['streak'] = await (await streak.getProperty('textContent')).jsonValue();
     let problems = await page.$$('.react-bs-container-body > table > tbody > tr');
@@ -72,48 +73,60 @@ module.exports = robot => {
     res.send('hoge');
   });
 
-  new cron('0 59 23 * * *', () => {
+  new cron('0 58 23 * * *', () => {
     !(async() => {
       await summarize(robot, 'xuzijian629');
-    })();;
+    })();
     !(async() => {
       await summarize(robot, 'kenshin');
-    })();;
+    })();
+    !(async() => {
+      await summarize(robot, 'ScarletBat');
+    })();
     !(async() => {
       await summarize(robot, 'shiatsumat');
-    })();;
+    })();
     !(async() => {
       await summarize(robot, 'satos');
-    })();;
+    })();
     !(async() => {
       await summarize(robot, 'tomcatowl');
-    })();;
+    })();
   }, null, true, 'Asia/Tokyo');
 
-  new cron('0 59 19 * * *', () => {
+  new cron('0 58 19 * * *', () => {
     !(async() => {
       await notifyIfUnsolved(robot, 'xuzijian629', 'AtCoderやれ');
-    })();;
+    })();
     !(async() => {
       await notifyIfUnsolved(robot, 'kenshin', 'AtCoderやれ');
-    })();;
+    })();
+    !(async() => {
+      await notifyIfUnsolved(robot, 'ScarletBat', 'AtCoderやれ');
+    })();
   }, null, true, 'Asia/Tokyo');
 
-  new cron('0 59 21 * * *', () => {
+  new cron('0 58 21 * * *', () => {
     !(async() => {
       await notifyIfUnsolved(robot, 'xuzijian629', 'そろそろAtCoderやれ');
-    })();;
+    })();
     !(async() => {
       await notifyIfUnsolved(robot, 'kenshin', 'そろそろAtCoderやれ');
-    })();;
+    })();
+    !(async() => {
+      await notifyIfUnsolved(robot, 'ScarletBat', 'そろそろAtCoderやれ');
+    })();
   }, null, true, 'Asia/Tokyo');
 
-  new cron('0 59 22 * * *', () => {
+  new cron('0 58 22 * * *', () => {
     !(async() => {
       await notifyIfUnsolved(robot, 'xuzijian629', 'いい加減AtCoderやれ');
-    })();;
+    })();
     !(async() => {
       await notifyIfUnsolved(robot, 'kenshin', 'いい加減AtCoderやれ');
-    })();;
+    })();
+    !(async() => {
+      await notifyIfUnsolved(robot, 'ScarletBat', 'いい加減AtCoderやれ');
+    })();
   }, null, true, 'Asia/Tokyo');
 }
