@@ -5,14 +5,16 @@ const id = {
   'xuzijian629': 'U2F6UPCKB',
   'kenshin': 'U2F7L8BGE',
   'ScarletBat': 'U2F5TUURF',
-  'szkieletor': 'U2F6AMVDG'
+  'szkieletor': 'U2F6AMVDG',
+  'tomcatowl': 'U2F7K0FPX'
 };
 
 let latestPointsum = {
-  'xuzijian629': 91700,
-  'kenshin': 18700,
-  'ScarletBat': 3700,
-  'szkieletor': 10000
+  'xuzijian629': 92400,
+  'kenshin': 18800,
+  'ScarletBat': 4300,
+  'szkieletor': 10000,
+  'tomcatowl': 28900
 };
 
 async function getSolvedProblems(user, date, update) {
@@ -26,8 +28,8 @@ async function getSolvedProblems(user, date, update) {
     ret['streak'] = await (await streak.getProperty('textContent')).jsonValue();
     let longestStreak = await page.$('#root > div > div > div > div > div:nth-child(3) > div:nth-child(6) > h3');
     ret['isLongest'] = ret['streak'] === await (await longestStreak.getProperty('textContent')).jsonValue();
-    if (ret['streak'] === '1days') {
-      ret['streak'] = '1day';
+    if (ret['streak'] === '1 days') {
+      ret['streak'] = '1 day';
     }
     let pointsum = await page.$('#root > div > div > div > div > div:nth-child(3) > div:nth-child(5) > h3');
     let sumvalue = await (await pointsum.getProperty('textContent')).jsonValue();
@@ -69,7 +71,7 @@ async function notifyIfUnsolved(robot, user, message) {
       robot.send({room: '#daily_atcoder'}, `<@${id[user]}> ${message}`);
       return;
     }
-    if (solved['pointsum'] && solved['pointsum'] < 400) {
+    if (solved['pointsum'] && solved['pointsum'] < 300) {
       robot.send({room: '#daily_atcoder'}, `<@${id[user]}> もうちょっとAtCoderやれ`);
       return;
     }
@@ -85,7 +87,7 @@ async function summarize(robot, user) {
     if (solved['solved'].length) {
       message = '';
       message += `<@${id[user]}> solved *${solved['solved'].length} problem${solved['solved'].length > 1 ? 's' : ''}*!!`;
-      if (solved['pointsum']) message += ` Total *${solved['pointsum']} points*`;
+      if (solved['pointsum']) message += ` Total *${solved['pointsum']} points* (Rated only)`;
       message += '\n';
       if (user in id) {
         message += `That's *${solved['streak']}* in a row to solve problems at AtCoder!${solved['isLongest'] ? " That's a new record!!" : ''}\n`;
@@ -111,19 +113,24 @@ module.exports = robot => {
       await summarize(robot, 'xuzijian629');
     })();
   }, null, true, 'Asia/Tokyo');
-  new cron('30 58 23 * * *', () => {
+  new cron('20 58 23 * * *', () => {
     !(async() => {
       await summarize(robot, 'kenshin');
     })();
   }, null, true, 'Asia/Tokyo');
-  new cron('0 59 23 * * *', () => {
+  new cron('40 58 23 * * *', () => {
     !(async() => {
       await summarize(robot, 'ScarletBat');
     })();
   }, null, true, 'Asia/Tokyo');
-  new cron('30 59 23 * * *', () => {
+  new cron('0 59 23 * * *', () => {
     !(async() => {
       await summarize(robot, 'szkieletor');
+    })();
+  }, null, true, 'Asia/Tokyo');
+  new cron('20 59 23 * * *', () => {
+    !(async() => {
+      await summarize(robot, 'tomcatowl');
     })();
   }, null, true, 'Asia/Tokyo');
 
@@ -140,6 +147,9 @@ module.exports = robot => {
     !(async() => {
       await notifyIfUnsolved(robot, 'szkieletor', 'AtCoderやれ');
     })();
+    !(async() => {
+      await notifyIfUnsolved(robot, 'tomcatowl', 'AtCoderやれ');
+    })();
   }, null, true, 'Asia/Tokyo');
 
   new cron('0 58 21 * * *', () => {
@@ -155,6 +165,9 @@ module.exports = robot => {
     !(async() => {
       await notifyIfUnsolved(robot, 'szkieletor', 'そろそろAtCoderやれ');
     })();
+    !(async() => {
+      await notifyIfUnsolved(robot, 'tomcatowl', 'そろそろAtCoderやれ');
+    })();
   }, null, true, 'Asia/Tokyo');
 
   new cron('0 58 22 * * *', () => {
@@ -169,6 +182,9 @@ module.exports = robot => {
     })();
     !(async() => {
       await notifyIfUnsolved(robot, 'szkieletor', 'いい加減AtCoderやれ');
+    })();
+    !(async() => {
+      await notifyIfUnsolved(robot, 'tomcatowl', 'いい加減AtCoderやれ');
     })();
   }, null, true, 'Asia/Tokyo');
 }
