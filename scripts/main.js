@@ -104,7 +104,7 @@ async function summarize(robot, user) {
 }
 
 module.exports = robot => {
-  robot.hear('test', res => {
+  robot.hear(/^test$/, res => {
     res.send('hoge');
   });
 
