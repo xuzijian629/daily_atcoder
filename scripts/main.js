@@ -10,12 +10,14 @@ const id = {
 };
 
 let latestPointsum = {
-  'xuzijian629': 92400,
-  'kenshin': 18800,
-  'ScarletBat': 4300,
-  'szkieletor': 10000,
-  'tomcatowl': 28900
+  'xuzijian629': undefined,
+  'kenshin': undefined,
+  'ScarletBat': undefined,
+  'szkieletor': undefined,
+  'tomcatowl': undefined
 };
+
+let mute = {};
 
 async function getSolvedProblems(user, date, update) {
   let ret = {solved: []};
@@ -65,6 +67,7 @@ async function getSolvedProblems(user, date, update) {
 
 async function notifyIfUnsolved(robot, user, message) {
   try {
+    if (mute[id[user]]) return;
     const today = (new Date(Date.now() + 9 * 3600000)).toISOString().slice(0,10);
     let solved = await getSolvedProblems(user, today, false);
     if (solved['solved'].length === 0) {
@@ -97,16 +100,32 @@ async function summarize(robot, user) {
         message += `${s.problem} ${s.link}\n`;
       }
       robot.send({room: '#daily_atcoder'}, message.slice(0, message.length - 1));
+      mute[id[user]] = false;
     }
   } catch(e) {
     robot.logger.error(e);
   }
 }
 
+async function init() {
+  const today = (new Date(Date.now() + 9 * 3600000)).toISOString().slice(0,10);
+  for (let user in id) {
+    getSolvedProblems(user, today, true);
+  }
+}
+
 module.exports = robot => {
-  robot.hear(/^test$/, res => {
+  robot.hear(/test$/, res => {
     res.send('hoge');
   });
+
+  robot.hear(/やらない$/, res => {
+    mute[res.message.user.id] = true;
+  });
+
+  !(async() => {
+    init();
+  })();
 
   new cron('0 58 23 * * *', () => {
     !(async() => {
