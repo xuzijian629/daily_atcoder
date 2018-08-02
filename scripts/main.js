@@ -8,15 +8,7 @@ const id = {
   'szkieletor': 'U2F6AMVDG',
   'tomcatowl': 'U2F7K0FPX'
 };
-
-let latestPointsum = {
-  'xuzijian629': undefined,
-  'kenshin': undefined,
-  'ScarletBat': undefined,
-  'szkieletor': undefined,
-  'tomcatowl': undefined
-};
-
+let latestPointsum = {};
 let mute = {};
 
 async function getSolvedProblems(user, date, update) {
@@ -128,82 +120,26 @@ module.exports = robot => {
   })();
 
   new cron('0 58 23 * * *', () => {
-    !(async() => {
-      await summarize(robot, 'xuzijian629');
-    })();
-  }, null, true, 'Asia/Tokyo');
-  new cron('20 58 23 * * *', () => {
-    !(async() => {
-      await summarize(robot, 'kenshin');
-    })();
-  }, null, true, 'Asia/Tokyo');
-  new cron('40 58 23 * * *', () => {
-    !(async() => {
-      await summarize(robot, 'ScarletBat');
-    })();
-  }, null, true, 'Asia/Tokyo');
-  new cron('0 59 23 * * *', () => {
-    !(async() => {
-      await summarize(robot, 'szkieletor');
-    })();
-  }, null, true, 'Asia/Tokyo');
-  new cron('20 59 23 * * *', () => {
-    !(async() => {
-      await summarize(robot, 'tomcatowl');
-    })();
-  }, null, true, 'Asia/Tokyo');
-
-  new cron('0 58 19 * * *', () => {
-    !(async() => {
-      await notifyIfUnsolved(robot, 'xuzijian629', 'AtCoderやれ');
-    })();
-    !(async() => {
-      await notifyIfUnsolved(robot, 'kenshin', 'AtCoderやれ');
-    })();
-    !(async() => {
-      await notifyIfUnsolved(robot, 'ScarletBat', 'AtCoderやれ');
-    })();
-    !(async() => {
-      await notifyIfUnsolved(robot, 'szkieletor', 'AtCoderやれ');
-    })();
-    !(async() => {
-      await notifyIfUnsolved(robot, 'tomcatowl', 'AtCoderやれ');
-    })();
+    for (let user in id) {
+      !(async() => {
+        await summarize(robot, user);
+      })();
+    }
   }, null, true, 'Asia/Tokyo');
 
   new cron('0 58 21 * * *', () => {
-    !(async() => {
-      await notifyIfUnsolved(robot, 'xuzijian629', 'そろそろAtCoderやれ');
-    })();
-    !(async() => {
-      await notifyIfUnsolved(robot, 'kenshin', 'そろそろAtCoderやれ');
-    })();
-    !(async() => {
-      await notifyIfUnsolved(robot, 'ScarletBat', 'そろそろAtCoderやれ');
-    })();
-    !(async() => {
-      await notifyIfUnsolved(robot, 'szkieletor', 'そろそろAtCoderやれ');
-    })();
-    !(async() => {
-      await notifyIfUnsolved(robot, 'tomcatowl', 'そろそろAtCoderやれ');
-    })();
+    for (let user in id) {
+      !(async() => {
+        await notifyIfUnsolved(robot, user, 'そろそろAtCoderやれ');
+      })();
+    }
   }, null, true, 'Asia/Tokyo');
 
   new cron('0 58 22 * * *', () => {
-    !(async() => {
-      await notifyIfUnsolved(robot, 'xuzijian629', 'いい加減AtCoderやれ');
-    })();
-    !(async() => {
-      await notifyIfUnsolved(robot, 'kenshin', 'いい加減AtCoderやれ');
-    })();
-    !(async() => {
-      await notifyIfUnsolved(robot, 'ScarletBat', 'いい加減AtCoderやれ');
-    })();
-    !(async() => {
-      await notifyIfUnsolved(robot, 'szkieletor', 'いい加減AtCoderやれ');
-    })();
-    !(async() => {
-      await notifyIfUnsolved(robot, 'tomcatowl', 'いい加減AtCoderやれ');
-    })();
+    for (let user in id) {
+      !(async() => {
+        await notifyIfUnsolved(robot, user, 'いい加減AtCoderやれ');
+      })();
+    }
   }, null, true, 'Asia/Tokyo');
 }
