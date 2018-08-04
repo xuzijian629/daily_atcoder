@@ -77,7 +77,7 @@ async function notifyIfUnsolved(robot, user, message) {
 
 async function summarize(robot, user) {
   try {
-    const today = (new Date(Date.now() + 9 * 3600000)).toISOString().slice(0,10);
+    const today = (new Date(Date.now() + 9 * 3600000 - 600000)).toISOString().slice(0,10);
     let solved = await getSolvedProblems(user, today, true);
     if (solved['solved'].length) {
       message = '';
@@ -119,10 +119,18 @@ module.exports = robot => {
     init();
   })();
 
-  new cron('0 58 23 * * *', () => {
+  new cron('0 8 0 * * *', () => {
     for (let user in id) {
       !(async() => {
         await summarize(robot, user);
+      })();
+    }
+  }, null, true, 'Asia/Tokyo');
+
+  new cron('0 58 19 * * *', () => {
+    for (let user in id) {
+      !(async() => {
+        await notifyIfUnsolved(robot, user, 'AtCoderやれ');
       })();
     }
   }, null, true, 'Asia/Tokyo');
