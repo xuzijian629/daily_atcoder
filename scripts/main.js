@@ -53,6 +53,7 @@ async function getSolvedProblems(user, date, update) {
     }
     browser.close();
   } catch(e) {
+    console.error(e);
   }
   return ret;
 }
@@ -62,6 +63,8 @@ async function notifyIfUnsolved(robot, user, message) {
     if (mute[id[user]]) return;
     const today = (new Date(Date.now() + 9 * 3600000)).toISOString().slice(0,10);
     let solved = await getSolvedProblems(user, today, false);
+    console.log(`${user} solved:`);
+    console.log(solved);
     if (solved['solved'].length === 0) {
       robot.send({room: '#daily_atcoder'}, `<@${id[user]}> ${message}`);
       return;
@@ -71,7 +74,7 @@ async function notifyIfUnsolved(robot, user, message) {
       return;
     }
   } catch(e) {
-    robot.logger.error(e);
+    console.error(e);
   }
 }
 
@@ -79,6 +82,8 @@ async function summarize(robot, user) {
   try {
     const today = (new Date(Date.now() + 9 * 3600000 - 600000)).toISOString().slice(0,10);
     let solved = await getSolvedProblems(user, today, true);
+    console.log(`${user} solved:`);
+    console.log(solved);
     if (solved['solved'].length) {
       message = '';
       message += `<@${id[user]}> solved *${solved['solved'].length} problem${solved['solved'].length > 1 ? 's' : ''}*!!`;
@@ -95,14 +100,14 @@ async function summarize(robot, user) {
       mute[id[user]] = false;
     }
   } catch(e) {
-    robot.logger.error(e);
+    console.error(e);
   }
 }
 
 async function init() {
   const today = (new Date(Date.now() + 9 * 3600000)).toISOString().slice(0,10);
   for (let user in id) {
-    getSolvedProblems(user, today, true);
+    await getSolvedProblems(user, today, true);
   }
 }
 
@@ -116,7 +121,7 @@ module.exports = robot => {
   });
 
   !(async() => {
-    init();
+    await init();
   })();
 
   new cron('0 8 0 * * *', () => {
