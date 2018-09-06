@@ -135,6 +135,10 @@ module.exports = robot => {
     mute[res.message.user.id] = true;
   });
 
+	robot.hear(/mute$/, res => {
+		res.send(mute);
+	});
+
   !(async() => {
     await init();
   })();
